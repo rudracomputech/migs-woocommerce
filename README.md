@@ -12,3 +12,5 @@
 
 
 4 "Hosted Payment Page" to redirect on merchant knowledge and "Direct Integration" to make payment on our website.
+
+Please contact <a href="mailto:rudracomputechs@gmail.com">rudracomputechs@gmail.com</a> for additional functionalities.
