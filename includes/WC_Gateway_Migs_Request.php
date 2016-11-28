@@ -99,7 +99,10 @@ class WC_Gateway_Migs_Request {
         // Create the secure hash and append it to the Virtual Payment Client Data if
         // the merchant secret has been provided.
         if (strlen($md5HashData) > 0) {
-            $vpcURL .= "&vpc_SecureHash=" . strtoupper(md5($md5HashData));
+          //  $vpcURL .= "&vpc_SecureHash=" . strtoupper(md5($md5HashData));
+	  // secure hash SHA256 added
+	  $vpcURL .= "&vpc_SecureHash=" . strtoupper(hash_hmac('SHA256',$md5HashData,pack('H*',$access_code)))."&vpc_SecureHashType=SHA256";
+       
         }
         return $vpcURL;
     }
