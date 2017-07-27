@@ -65,7 +65,7 @@ class WC_gateway_comm_web_response_handler {
             // The hash check is all about detecting if the data has changed in transit.
             // if (strtoupper($vpc_Txn_Secure_Hash) == strtoupper(md5($md5HashData))) {
 				//die($_GET['vpc_Message']);
-            if ($_GET['vpc_Message'] == 'Approved') {
+            if ($_GET['vpc_Message'] == 'Approved') { // custom hack added to check response
                 if ( $this->log_mode ) { error_log($this->TAG . "VALID HASH"); }
                 do_action( 'valid-comm-web-response', $_GET);
                 exit;
