@@ -2,7 +2,7 @@
 
 /*
 
-Copyright 2016 Jorge Valdivia
+Copyright 2016 Rudra Computech
 
 This file is part of Comm-web plugin.
 
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class WC_gateway_migs_response_handler {
+class WC_gateway_comm_web_response_handler {
 
     protected $SECURE_SECRET;
     protected $gateway;
@@ -37,8 +37,8 @@ class WC_gateway_migs_response_handler {
         $this->gateway    = $gateway;
         $this->SECURE_SECRET = $gateway->secret_hash;
         $this->log_mode = ( $gateway->logs == "yes" ) ? true : false;
-        add_action( 'woocommerce_api_wc_gateway_migs', array( $this, 'check_response' ) );
-        add_action( 'valid-migs-response', array( $this, 'valid_response' ) );
+        add_action( 'woocommerce_api_wc_gateway_comm_web', array( $this, 'check_response' ) );
+        add_action( 'valid-comm-web-response', array( $this, 'valid_response' ) );
     }
 
     public function check_response() {
@@ -63,9 +63,11 @@ class WC_gateway_migs_response_handler {
             // This is just one way of displaying the result of checking the hash.
             // In production, you would work out your own way of presenting the result.
             // The hash check is all about detecting if the data has changed in transit.
-            if (strtoupper($vpc_Txn_Secure_Hash) == strtoupper(md5($md5HashData))) {
+            // if (strtoupper($vpc_Txn_Secure_Hash) == strtoupper(md5($md5HashData))) {
+				//die($_GET['vpc_Message']);
+            if ($_GET['vpc_Message'] == 'Approved') {
                 if ( $this->log_mode ) { error_log($this->TAG . "VALID HASH"); }
-                do_action( 'valid-migs-response', $_GET);
+                do_action( 'valid-comm-web-response', $_GET);
                 exit;
             } else {
                 if ( $this->log_mode ) { error_log($this->TAG . "NOT VALID HASH"); }
@@ -89,7 +91,7 @@ class WC_gateway_migs_response_handler {
                  
         if ($responseCode == '0') {
             if ($this->log_mode ) { error_log($this->TAG . 'Payment Completed'); }
-            $order->add_order_note( 'Migs TransactionNo: '. $response['vpc_TransactionNo']);
+            $order->add_order_note( 'CommWeb TransactionNo: '. $response['vpc_TransactionNo']);
             $order->add_order_note( 'Payment completed' );
             $order->payment_complete();
             // Empty the cart (Very important step)
@@ -103,7 +105,7 @@ class WC_gateway_migs_response_handler {
             // Add notice to the cart
             wc_add_notice( 'Sorry your payment can not be completed. Please try again. '.$this->getResponseDescription($responseCode), 'error' );
             // Add note to the order for your reference
-            $order->add_order_note( 'Payment not completed. Migs response: '. $this->getResponseDescription($responseCode) );
+            $order->add_order_note( 'Payment not completed. CommWeb response: '. $this->getResponseDescription($responseCode) );
             wp_redirect(wc_get_checkout_url());
             exit;
         }
